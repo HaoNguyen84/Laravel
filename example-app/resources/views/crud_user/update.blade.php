@@ -53,7 +53,7 @@
                         </div>
                         <div class="form-group">
                             <label for="email">email</label>
-                            <input type="text" class="form-control" placeholder="nhap email" value="{{ $user->email }}" id="email_address">
+                            <input type="text" placeholder="Email" id="email_address" class="form-control" value="{{ $user->email }}" name="email" required autofocus>
                             @if ($errors->has('email'))
                             <span class="text-danger">{{ $errors->first('email') }}</span>
                             @endif
