@@ -65,6 +65,20 @@
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                             @endif
                         </div>
+                        <div class="form-group">
+                            <label for="phone">nhập phone</label>
+                            <input type="text" placeholder="Phone" id="phone" class="form-control" name="phone" required>
+                            @if ($errors->has('phone'))
+                            <span class="text-danger">{{ $errors->first('phone') }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group">
+                            <label for="image">nhập image</label>
+                            <input type="text" placeholder="Image" id="image" class="form-control" name="image" required>
+                            @if ($errors->has('image'))
+                            <span class="text-danger">{{ $errors->first('image') }}</span>
+                            @endif
+                        </div>
                         
                         <input type="submit" name="submit" class="btn btn-primary" style="float:left;" value="Edit">
                     </form>
