@@ -7,6 +7,9 @@ use Session;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 /**
  * CRUD User controller
@@ -36,7 +39,7 @@ class CrudUserController extends Controller
 
         if (Auth::attempt($credentials)) {
             return redirect()->intended('list')
-                ->withSuccess('Signed in');
+                ->withSuccess('Đăng Nhập Thành Công!');
         }
 
         return redirect("login")->withSuccess('Login details are not valid');
@@ -50,6 +53,12 @@ class CrudUserController extends Controller
         return view('crud_user.create');
     }
 
+
+
+
+
+
+
     /**
      * User submit form register
      */
@@ -59,22 +68,35 @@ class CrudUserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
+            'phone_number' => 'nullable|numeric',
+            'profile_image' => 'required|image',
         ]);
 
-        $data = $request->all();
+        // ghi lại dữ liệu nhị phân từ hình ảnh nha và lưu trữ vào cột 'profile_image'
+        $imageContent = file_get_contents($request->file('profile_image')->path());
+
+        // Tạo một bản ghi mới trong bảng 'users'
         $check = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'phone_number' => $request->phone_number,
+            'profile_image' => $imageContent,
         ]);
 
         return redirect("login");
     }
 
+
+
+
+
+
     /**
      * View user detail page
      */
-    public function readUser(Request $request) {
+    public function readUser(Request $request)
+    {
         $user_id = $request->get('id');
         $user = User::find($user_id);
 
@@ -84,11 +106,12 @@ class CrudUserController extends Controller
     /**
      * Delete user by id
      */
-    public function deleteUser(Request $request) {
+    public function deleteUser(Request $request)
+    {
         $user_id = $request->get('id');
         $user = User::destroy($user_id);
-
-        return redirect("list")->withSuccess('You have signed-in');
+    
+        return redirect("list")->withSuccess('Bạn đã xóa thành công!!');
     }
 
     /**
@@ -106,36 +129,52 @@ class CrudUserController extends Controller
      * Submit form update user
      */
     public function postUpdateUser(Request $request)
-    {
-        $input = $request->all();
+{
+    // lấy input từ request
+    $input = $request->all();
 
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,id,'.$input['id'],
-            'password' => 'required|min:6',
-            'phone' => 'required|min:10',
-            'image' => 'required'
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email|unique:users,email,' . $input['id'],
+        'password' => 'required|min:6',
+        'phone_number' => 'nullable|numeric',
+        'profile_image' => 'nullable|image',
+    ]);
 
-        ]);
+    $user = User::find($input['id']);
 
-       $user = User::find($input['id']);
-       $user->name = $input['name'];
-       $user->email = $input['email'];
-       $user->password = $input['password'];
-       $user->phone =$input['phone'];
-       $user->image =$input['image'];
-       $user->save();
+    // update user
+    $user->name = $input['name'];
+    $user->email = $input['email'];
+    $user->password = $input['password'];
+    $user->phone_number = $input['phone_number'];
 
-        return redirect("list")->withSuccess('You have signed-in');
+    // kiểm tra tải lên hình ảnh chưa ấy
+    if ($request->hasFile('profile_image')) {
+        //ghi dữ liệu ở database ấy vào cột 'profile_image'
+        $imageContent = file_get_contents($request->file('profile_image')->path());
+        $user->profile_image = $imageContent; // Sửa lại tên cột thành 'profile_image'
     }
+
+    // Lưu 
+    $user->save();
+
+    return redirect("list")->withSuccess('You have signed-in');
+}
+
+    
+
 
     /**
      * List of users
      */
     public function listUser()
     {
-        if(Auth::check()){
-            $users = User::all();
+        if (Auth::check()) {
+            //Số lượng người dùng trên mỗi trang
+            $perpage = 3;
+            //Lấy danh sách người dùng được phân trang
+            $users = User::paginate($perpage);
             return view('crud_user.list', ['users' => $users]);
         }
 
@@ -145,10 +184,11 @@ class CrudUserController extends Controller
     /**
      * Sign out
      */
-    public function signOut() {
+    public function signOut()
+    {
         Session::flush();
         Auth::logout();
-
-        return Redirect('login');
+        
+        return Redirect('login')->withSuccess('Bạn đã đăng xuất thành công!!');;
     }
 }
