@@ -170,6 +170,7 @@ class CrudUserController extends Controller
     /**
      * List of users
      */
+    // hung lam o day
     public function listUser()
     {
         if (Auth::check()) {
