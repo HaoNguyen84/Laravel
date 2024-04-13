@@ -1,4 +1,4 @@
-
+<!-- chuẩn làm file này -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +21,7 @@
         <div class="cotainer" style="margin-top:100px;">
             <div class="row justify-content-center">
                 <div class="col-md-4">
+                    
                 @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
