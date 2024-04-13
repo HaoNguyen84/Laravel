@@ -62,6 +62,7 @@ class CrudUserController extends Controller
     /**
      * User submit form register
      */
+    //hao tai day
     public function postUser(Request $request)
     {
         $request->validate([
