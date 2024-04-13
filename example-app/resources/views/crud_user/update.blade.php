@@ -1,3 +1,4 @@
+<!-- khoa làm hết trang này -->
 @extends('dashboard')
 
 @section('content')
