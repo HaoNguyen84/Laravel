@@ -28,8 +28,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('signout') }}" onclick="confirmSignOut()">Đăng xuất</a>
 
-                        
-
+                        <!-- chuẩn làm code này -->
                         <script>
                             function confirmSignOut() {
                                 if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
