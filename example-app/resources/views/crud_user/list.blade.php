@@ -80,6 +80,7 @@
                         <td>
                             <a href="{{ route('user.readUser', ['id' => $user->id]) }}">View</a> |
                             <a href="{{ route('user.updateUser', ['id' => $user->id]) }}">Edit</a> |
+                            <!-- canh lam o day -->
                             <a href="{{ route('user.deleteUser', ['id' => $user->id]) }}" onclick="confirmDelete()">Delete</a>
                             <script>
                             function confirmDelete() {

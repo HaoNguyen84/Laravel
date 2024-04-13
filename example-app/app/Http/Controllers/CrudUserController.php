@@ -106,6 +106,7 @@ class CrudUserController extends Controller
     /**
      * Delete user by id
      */
+    // canh lam o day
     public function deleteUser(Request $request)
     {
         $user_id = $request->get('id');
