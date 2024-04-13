@@ -128,6 +128,7 @@ class CrudUserController extends Controller
     /**
      * Submit form update user
      */
+    // khoa làm code duoi nay postUpdateUser
     public function postUpdateUser(Request $request)
 {
     // lấy input từ request
